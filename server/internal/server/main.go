@@ -5,6 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/kelvin-mai/personal-finance/internal/config"
 	"github.com/kelvin-mai/personal-finance/internal/database"
+	"github.com/kelvin-mai/personal-finance/internal/server/router"
 )
 
 type Server struct {
@@ -14,7 +15,9 @@ type Server struct {
 }
 
 func NewServer(cfg *config.Config) *Server {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		ErrorHandler: router.DefaultErrorHandler,
+	})
 	port := ":" + cfg.Port
 	db := database.Connect(cfg.DatabaseUrl)
 	return &Server{
@@ -25,6 +28,7 @@ func NewServer(cfg *config.Config) *Server {
 }
 
 func (s *Server) Start() error {
+	s.SetupRoutes()
 	return s.app.Listen(s.port)
 }
 
