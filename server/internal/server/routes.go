@@ -5,7 +5,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
+	"github.com/kelvin-mai/personal-finance/internal/controller"
 	"github.com/kelvin-mai/personal-finance/internal/server/router"
+	"github.com/kelvin-mai/personal-finance/internal/server/router/middleware"
 )
 
 func healthCheck(db *sqlx.DB) fiber.Handler {
@@ -21,7 +23,11 @@ func healthCheck(db *sqlx.DB) fiber.Handler {
 	}
 }
 
-func (s *Server) SetupRoutes() {
+func (s *Server) SetupRoutes(uc *controller.AuthController) {
 	api := s.app.Group("/api")
 	api.Get("/", healthCheck(s.db))
+
+	api.Post("/login", uc.Login)
+	api.Post("/register", uc.Register)
+	api.Get("/me", middleware.Authenticate(s.jwtSecret), uc.Me)
 }

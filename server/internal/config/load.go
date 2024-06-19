@@ -12,6 +12,7 @@ import (
 type Config struct {
 	Port        string
 	DatabaseUrl string
+	JwtSecret   string
 }
 
 func getPort() string {
@@ -35,6 +36,10 @@ func getDatabaseUrl() string {
 	return dbUrl
 }
 
+func getJwtSecret() string {
+	return os.Getenv("JWT_SECRET")
+}
+
 func Load() *Config {
 	if err := godotenv.Load(); err != nil {
 		log.Fatalf("Error loading .env file: %v\n", err)
@@ -42,5 +47,6 @@ func Load() *Config {
 	return &Config{
 		Port:        getPort(),
 		DatabaseUrl: getDatabaseUrl(),
+		JwtSecret:   getJwtSecret(),
 	}
 }
