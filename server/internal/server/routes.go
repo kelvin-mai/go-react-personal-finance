@@ -6,8 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
 	"github.com/kelvin-mai/personal-finance/internal/controller"
-	"github.com/kelvin-mai/personal-finance/internal/server/router"
 	"github.com/kelvin-mai/personal-finance/internal/server/router/middleware"
+	"github.com/kelvin-mai/personal-finance/internal/server/router/response"
 )
 
 func healthCheck(db *sqlx.DB) fiber.Handler {
@@ -17,7 +17,7 @@ func healthCheck(db *sqlx.DB) fiber.Handler {
 		if err != nil {
 			return errors.New("database unavailable")
 		}
-		return router.Ok(ctx, fiber.Map{
+		return response.Ok(ctx, fiber.Map{
 			"database": "available",
 		})
 	}

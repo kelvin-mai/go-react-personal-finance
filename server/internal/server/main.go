@@ -6,7 +6,7 @@ import (
 	"github.com/kelvin-mai/personal-finance/internal/config"
 	"github.com/kelvin-mai/personal-finance/internal/controller"
 	"github.com/kelvin-mai/personal-finance/internal/database"
-	"github.com/kelvin-mai/personal-finance/internal/server/router"
+	"github.com/kelvin-mai/personal-finance/internal/server/router/response"
 	"github.com/kelvin-mai/personal-finance/internal/service"
 )
 
@@ -19,7 +19,7 @@ type Server struct {
 
 func NewServer(cfg *config.Config) *Server {
 	app := fiber.New(fiber.Config{
-		ErrorHandler: router.DefaultErrorHandler,
+		ErrorHandler: response.DefaultErrorHandler,
 	})
 
 	port := ":" + cfg.Port

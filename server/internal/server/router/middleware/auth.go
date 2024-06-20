@@ -3,13 +3,14 @@ package middleware
 import (
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/kelvin-mai/personal-finance/internal/server/router/response"
 )
 
 func errorHandler(c *fiber.Ctx, err error) error {
 	if err.Error() == jwtware.ErrJWTMissingOrMalformed.Error() {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		return response.ErrorBadRequest(err)
 	}
-	return fiber.NewError(fiber.StatusUnauthorized, "Invalid or expired JWT")
+	return response.ErrorUnauthorized(err, "Invalid or expired token")
 }
 
 func Authenticate(secret string) fiber.Handler {
