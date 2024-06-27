@@ -51,3 +51,12 @@ func ErrorUnauthorized(err error, message string) error {
 		nil,
 	)
 }
+
+func ErrorNotFound(err error) error {
+	return NewApiError(
+		err,
+		fiber.StatusNotFound,
+		"Resource not found",
+		nil,
+	)
+}

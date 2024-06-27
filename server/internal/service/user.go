@@ -21,6 +21,12 @@ func (s *UserService) GetByUsername(username string) (model.User, error) {
 	return user, err
 }
 
+func (s *UserService) GetById(id string) (model.User, error) {
+	user := model.User{}
+	err := s.db.Get(&user, "select * from users where id = $1", id)
+	return user, err
+}
+
 func (s *UserService) Create(username, password string) (*model.User, error) {
 	rows, err := s.db.Queryx(
 		`insert into users (username, password)

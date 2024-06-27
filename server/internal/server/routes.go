@@ -23,11 +23,22 @@ func healthCheck(db *sqlx.DB) fiber.Handler {
 	}
 }
 
-func (s *Server) SetupRoutes(uc *controller.AuthController) {
+func (s *Server) SetupRoutes(
+	uc *controller.AuthController,
+	cc *controller.CategoryController,
+) {
 	api := s.app.Group("/api")
 	api.Get("/", healthCheck(s.db))
 
 	api.Post("/login", uc.Login)
 	api.Post("/register", uc.Register)
 	api.Get("/me", middleware.Authenticate(s.jwtSecret), uc.Me)
+
+	categories := api.Group("/category")
+	categories.Use(middleware.Authenticate(s.jwtSecret))
+	categories.Get("/", cc.List)
+	categories.Post("/", cc.Create)
+	categories.Get("/:id", cc.Get)
+	categories.Put("/:id", cc.Update)
+	categories.Delete("/:id", cc.Delete)
 }

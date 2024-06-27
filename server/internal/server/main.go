@@ -35,10 +35,12 @@ func NewServer(cfg *config.Config) *Server {
 
 func (s *Server) Start() error {
 	us := service.NewUserService(s.db)
+	cs := service.NewCategoryService(s.db)
 
 	uc := controller.NewAuthController(us, s.jwtSecret)
+	cc := controller.NewCategoryController(cs)
 
-	s.SetupRoutes(uc)
+	s.SetupRoutes(uc, cc)
 	return s.app.Listen(s.port)
 }
 
