@@ -26,6 +26,7 @@ func healthCheck(db *sqlx.DB) fiber.Handler {
 func (s *Server) SetupRoutes(
 	uc *controller.AuthController,
 	cc *controller.CategoryController,
+	tc *controller.TransactionController,
 ) {
 	api := s.app.Group("/api")
 	api.Get("/", healthCheck(s.db))
@@ -41,4 +42,12 @@ func (s *Server) SetupRoutes(
 	categories.Get("/:id", cc.Get)
 	categories.Put("/:id", cc.Update)
 	categories.Delete("/:id", cc.Delete)
+
+	transactions := api.Group("/transaction")
+	transactions.Use(middleware.Authenticate(s.jwtSecret))
+	transactions.Get("/", tc.GetAll)
+	transactions.Post("/", tc.Create)
+	transactions.Get("/:id", tc.Get)
+	transactions.Put("/:id", tc.Update)
+	transactions.Delete("/:id", tc.Delete)
 }

@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/jmoiron/sqlx"
 	"github.com/kelvin-mai/personal-finance/internal/config"
 	"github.com/kelvin-mai/personal-finance/internal/controller"
@@ -22,6 +23,8 @@ func NewServer(cfg *config.Config) *Server {
 		ErrorHandler: response.DefaultErrorHandler,
 	})
 
+	app.Use(cors.New())
+
 	port := ":" + cfg.Port
 	db := database.Connect(cfg.DatabaseUrl)
 
@@ -36,11 +39,13 @@ func NewServer(cfg *config.Config) *Server {
 func (s *Server) Start() error {
 	us := service.NewUserService(s.db)
 	cs := service.NewCategoryService(s.db)
+	ts := service.NewTransactionService(s.db)
 
 	uc := controller.NewAuthController(us, s.jwtSecret)
 	cc := controller.NewCategoryController(cs)
+	tc := controller.NewTransactionController(ts)
 
-	s.SetupRoutes(uc, cc)
+	s.SetupRoutes(uc, cc, tc)
 	return s.app.Listen(s.port)
 }
 

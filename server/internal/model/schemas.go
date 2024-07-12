@@ -23,7 +23,7 @@ type Transaction struct {
 	UserId     string     `db:"user_id" json:"userId"`
 	CategoryId string     `db:"category_id" json:"categoryId"`
 	Title      string     `json:"title"`
-	Amount     string     `json:"amount"`
+	Amount     float32    `json:"amount"`
 	Currency   string     `json:"currency"`
 	Type       string     `json:"type"`
 	CreatedAt  time.Time  `db:"created_at" json:"createdAt"`
